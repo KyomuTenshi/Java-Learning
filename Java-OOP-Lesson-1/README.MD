@@ -1,129 +1,69 @@
-# 📘 Lesson 1. Java Backend Basics: OOP
+# Изучение основ ООП на Java (Занятие 1)
 
-## 1. Lesson Objectives
-
-* Understand the practical application of Encapsulation, Inheritance, Polymorphism, and Abstraction in real-world code.
-* Prepare for understanding Spring Boot application layers:
-
-  * Entity
-  * Service
-  * Repository
+Этот проект представляет собой выполнение практического задания в рамках повторения объектно-ориентированного программирования (ООП). На примере работы с геометрическими фигурами были закреплены фундаментальные концепции, которые в дальнейшем станут основой для работы со Spring Boot архитектурой (Entity, Service, Repository).
 
 ---
 
-# 2. Core Theory
+## 🚀 Что я изучил и применил в коде
 
-### 🔒 Encapsulation
+В ходе выполнения задания были успешно реализованы **четыре столпа ООП**, а также закреплено понимание разницы между абстрактными классами и интерфейсами.
 
-Hiding internal data (`private`) and providing controlled access through methods.
+### 1. Абстракция
 
-**Purpose:** protect object state and business logic from unwanted changes.
+Я применил абстракцию для выделения общей сущности и скрытия деталей реализации.
 
----
+* Создан абстрактный класс `Shape`, который задает общий контракт для всех геометрических фигур через абстрактный метод `calculateArea()`.
+* Детали вычисления площади скрыты на уровне абстракции и определяются только в конкретных классах-наследниках.
 
-### 🧬 Inheritance
+### 2. Инкапсуляция
 
-Reusing fields and methods from another class.
+Я обеспечил сокрытие внутреннего состояния объектов для защиты данных от некорректного изменения извне.
 
-Represents an:
+* Поля `radius` в классе `Circle`, а также `width` и `height` в классе `Rectangle` объявлены с модификатором доступа `private`.
+* Доступ к этим данным и управление ими происходят строго через конструкторы при создании объектов, предотвращая нарушение бизнес-логики.
 
-**"is-a" relationship**
+### 3. Наследование
 
-Example:
+Механизм наследования использован для построения технической иерархии (отношение *is-a* / *является*).
 
-```
-Dog is an Animal
-```
+* Классы `Circle` и `Rectangle` расширяют (`extends`) абстрактный класс `Shape`.
+* Благодаря этому они наследуют тип `Shape` и обязаны реализовать его методы.
 
-In modern backend development, inheritance is often replaced by **composition** (`has-a` relationship) to achieve better flexibility and loose coupling.
+### 4. Полиморфизм
 
----
+В проекте реализовано два вида полиморфизма времени выполнения (*Runtime Polymorphism*):
 
-### 🔄 Polymorphism
+* **Через абстрактный класс:** В классе `Main` создан единый список `List<Shape>`. Объекты разных классов (`Circle` и `Rectangle`) обрабатываются единообразно в цикле, но каждый выполняет свою формулу `calculateArea()`.
+* **Через интерфейс:** Фигуры приводятся к интерфейсу `Drawable` при проверке `instanceof`, что позволяет вызывать метод `draw()`, не зная конкретного класса фигуры.
 
-Allowing different objects to be used through a common interface or base class.
+### 5. Классы vs Интерфейсы (Разделение ответственности)
 
-This is the foundation for:
+Интерфейс `Drawable` с методом `draw()` вынесен отдельно от абстрактного класса `Shape`.
 
-* Interfaces
-* Dependency Injection
-* Spring Framework architecture
+* **Почему это важно:** Это практическое применение принципа *Interface Segregation* (ISP из SOLID). Не каждая геометрическая фигура в backend-системе обязана уметь отрисовывать себя в консоль. Разделение контракта «Фигура» (`Shape`) и контракта «Отрисовываемый объект» (`Drawable`) делает архитектуру гибкой.
 
----
+### 6. Аннотация `@Override`
 
-### 🎭 Abstraction
-
-Separating the contract ("what to do") from the implementation ("how to do it").
-
-Usually achieved using:
-
-* Interfaces
-* Abstract classes
+* Во всех классах-наследниках использована аннотация `@Override`. Она служит защитой от опечаток на этапе компиляции, гарантируя, что методы `calculateArea()` и `draw()` корректно переопределяют поведение родительских сущностей.
 
 ---
 
-# 3. Practical Code Breakdown
+## 🛠️ Как это работает в коде
 
-## Project Structure
+Продемонстрированные связи между объектами можно представить следующим образом:
 
-* 📄 `Shape.java` — Abstract class defining the core contract for calculating area.
+### Основные компоненты системы:
 
-* 📄 `Drawable.java` — Interface adding a separate capability to "draw".
-
-* 📄 `Circle.java` / `Rectangle.java` — Concrete shapes implementing area calculation and ASCII-art output.
-
-* 📄 `Main.java` — Entry point demonstrating polymorphic collections and type checking.
-
----
-
-# 4. Key Mechanisms in the Code
-
-## 1. Separation of Concerns (SOLID / Interface Segregation)
-
-The `draw()` method is isolated into the `Drawable` interface instead of being placed directly inside the `Shape` class.
-
-Reason:
-
-* A shape must have an area.
-* A shape does not necessarily need to know how to draw itself.
+* `Shape` — абстрактный класс, описывающий математическую фигуру.
+* `Drawable` — интерфейс-контракт для объектов, поддерживающих текстовую визуализацию.
+* `Circle` / `Rectangle` — конкретные классы, реализующие расчет площади и ASCII-отрисовку.
+* `Main` — точка входа, демонстрирующая полиморфный обход коллекции фигур.
 
 ---
 
-## 2. Runtime Polymorphism
+## 🎯 Связь с Backend-разработкой и Spring
 
-Inside the loop, the program calls:
+Опыт, полученный в этом мини-проекте, напрямую готовит к работе со Spring Boot:
 
-```java
-for (Shape shape : shapes) {
-    System.out.println("Площадь фигуры: " + shape.calculateArea());
-}
-```
-
-The JVM automatically determines and executes the correct implementation depending on the actual object type:
-
-* `Circle`
-* `Rectangle`
-
-This happens during runtime.
-
----
-
-## 3. Safe Type Casting (`instanceof`)
-
-When iterating through:
-
-```java
-List<Shape>
-```
-
-the compiler only knows methods available in `Shape`.
-
-To safely call `draw()`, type checking and casting are required:
-
-```java
-if (shape instanceof Drawable) {
-    ((Drawable) shape).draw();
-}
-```
-
-This prevents unsafe casting errors.
+* Работа с `List<Shape>` и вызов методов через абстракцию — это фундамент для **Dependency Injection (Внедрения зависимостей)**.
+* В Spring сервисы общаются с репозиториями через интерфейсы (например, `UserRepository`), не зная деталей реализации базы данных, точно так же, как класс `Main` вызывает `calculateArea()`, не задумываясь, круг это или прямоугольник.
