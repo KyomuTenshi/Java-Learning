@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: taskapi
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/taskdb
+    username: taskapi
+    password: taskapi_pass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
